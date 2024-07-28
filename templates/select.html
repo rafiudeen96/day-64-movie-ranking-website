@@ -9,6 +9,6 @@
   <p>
     <a href={{url_for('select_movie',movie_data=movie)}}> {{movie['original_title']}} - {{movie['release_date']}}</a>
   </p>
-
+    {% endfor %}
 </div>
 {% endblock %}

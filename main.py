@@ -43,10 +43,41 @@ class add_form(FlaskForm):
 with app.app_context():
     db.create_all()
 
+
+def function_ranking(duplicate_ranking=False):
+    all_movies = db.session.execute(db.select(movie).order_by(movie.rating.desc())).scalars()
+
+    for the_movie in all_movies:
+        the_movie.ranking = 1
+
+        movie_rating_list = []
+
+        all_movies_inner_loop = db.session.execute(db.select(movie).order_by(movie.rating.desc())).scalars()
+
+        for moviee in all_movies_inner_loop:
+            movie_rating_list.append(moviee.rating)
+
+        for i in range(len(movie_rating_list)):
+            if movie_rating_list[i] > the_movie.rating:
+                if i == len(movie_rating_list) - 1:
+                    the_movie.ranking += 1
+                else:
+                    if not duplicate_ranking:
+                        the_movie.ranking += 1
+                    else:
+                        if movie_rating_list[i] != movie_rating_list[i + 1]:
+                            the_movie.ranking += 1
+
+        db.session.commit()
+
+
+
 @app.route("/")
 def home():
-    all_movies = db.session.execute(db.select(movie).order_by(desc(movie.ranking))).scalars()
-    return render_template("index.html",movies=all_movies)
+    function_ranking()
+    all = db.session.execute(db.select(movie).order_by(desc(movie.ranking))).scalars()
+    return render_template("index.html",movies=all)
+
 
 @app.route("/edit/<int:id>",methods=["GET","POST"])
 def edit(id):
@@ -57,24 +88,14 @@ def edit(id):
         movie_to_edit = db.session.execute(db.select(movie).where(movie.id==id)).scalar()
         if rating != "":
             movie_to_edit.rating = float(rating)
-            movie_to_edit.ranking = 1
+            db.session.commit()
 
 # ----------------------------------- ranking ---------------------------------------------------------------- #
-            all_movies = db.session.execute(db.select(movie).order_by(movie.ranking)).scalars()
-            movie_rating_list = []
-            for moviee in all_movies:
-                movie_rating_list.append(moviee.rating)
-            for i in range(len(movie_rating_list)):
-                if movie_rating_list[i] > movie_to_edit.rating:
-                    if i == len(movie_rating_list)-1:
-                        movie_to_edit.ranking += 1
-                    else:
-                        if movie_rating_list[i] != movie_rating_list[i+1]:
-                            movie_to_edit.ranking += 1
+
 # ------------------------------------ ranking ----------------------------------------------------------------- #
         if review != "":
             movie_to_edit.review = review
-        db.session.commit()
+
         return redirect(url_for('home'))
     return render_template("edit.html",form=edit,id=id)
 
