@@ -18,6 +18,11 @@
 .large {
      font-size: 3rem;
 }
+
+.duplicate_ranking{
+display:flex;
+gap:10px
+}
  .content {
 	 display: flex;
 	 margin: 0 auto;
