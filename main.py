@@ -78,7 +78,11 @@ def function_ranking(duplicate_ranking=False):
                     if movie_rating_list[i] == the_movie.rating:
                         pass
                     else:
-                        the_movie.ranking += 1
+                        if i != 0:
+                            if not movie_rating_list[i] == movie_rating_list[i-1] :
+                                the_movie.ranking += 1
+                        elif i == 0:
+                            the_movie.ranking += 1
                 else:
                     if movie_rating_list[i] == the_movie.rating :
                         if i != 0:
