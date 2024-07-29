@@ -6,12 +6,13 @@
 <div class="container">
   <h1 class="heading">My Top 10 Movies</h1>
     <div class="duplicate_ranking">
-    <h1 class="heading">You want to enable duplicate ranking</h1>
-    <form method="post" id="form1" >
-        <button type="submit"  class="btn btn-lg btn-primary">Yes</button>
-        <button type="submit" onclick="changemethod('form1')" class="btn btn-lg btn-primary">No</button>
-</form>
-        </div>
+    <h1 class="heading">You want to enable duplicate ranking
+<!--    <form method="post" id="form1" >-->
+        <a href={{url_for('home',duplicate_ranking='yes')}} class="btn btn-lg btn-primary">Yes</a>
+        <a href={{url_for('home')}} class="btn btn-lg btn-primary">No</a>
+<!--</form>-->
+    </h1>
+    </div>
   <p class="description">These are my all-time favourite movies.</p>
    {% for movie in movies: %}
   <div class="card" >

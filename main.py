@@ -69,9 +69,9 @@ def function_ranking(duplicate_ranking=False):
             movie_id_list.append(moviee.id)
             movie_title_list.append(moviee.title)
         for i in range(len(movie_rating_list)):
-            print("\n\nThe begin;\n"
-                  f"Movie_to_be_updated : {the_movie.title} - Its rating: {the_movie.rating} - Its ranking: {the_movie.ranking} "
-                  f"Movie_to_be_compared: {movie_title_list[i]} - Its rating {movie_rating_list[i]}")
+            # print("\n\nThe begin;\n"
+            #       f"Movie_to_be_updated : {the_movie.title} - Its rating: {the_movie.rating} - Its ranking: {the_movie.ranking} "
+            #       f"Movie_to_be_compared: {movie_title_list[i]} - Its rating {movie_rating_list[i]}")
             if movie_rating_list[i] >= the_movie.rating and movie_id_list[i] != the_movie.id:
                 if duplicate_ranking:
                     print("\n\nduplicate ranking enabled")
@@ -99,17 +99,17 @@ def function_ranking(duplicate_ranking=False):
                     else:
                         the_movie.ranking += 1
 
-            print("\nThe end:\n"
-                f"Movie_to_be_updated : {the_movie.title} - Its rating: {the_movie.rating} - Its ranking: {the_movie.ranking} "
-                f"Movie_to_be_compared: {movie_title_list[i]} - Its rating {movie_rating_list[i]}")
+            # print("\nThe end:\n"
+            #     f"Movie_to_be_updated : {the_movie.title} - Its rating: {the_movie.rating} - Its ranking: {the_movie.ranking} "
+            #     f"Movie_to_be_compared: {movie_title_list[i]} - Its rating {movie_rating_list[i]}")
         db.session.commit()
 
 
 
 @app.route("/",methods=["GET","POST"])
 def home():
-    if request.method == "POST":
-        print("post")
+    if request.args.get('duplicate_ranking') == 'yes':
+        print("duplicate ranking")
         function_ranking(duplicate_ranking=True)
     else:
         print("get")
@@ -127,10 +127,6 @@ def edit(id):
         movie_to_edit = db.session.execute(db.select(movie).where(movie.id==id)).scalar()
         if rating != "":
             movie_to_edit.rating = float(rating)
-
-# ----------------------------------- ranking ---------------------------------------------------------------- #
-
-# ------------------------------------ ranking ----------------------------------------------------------------- #
         if review != "":
             movie_to_edit.review = review
 
